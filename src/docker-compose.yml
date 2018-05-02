@@ -1,0 +1,8 @@
+version: '3'
+
+services:
+  tatar.api:
+    image: tatar.api
+    build:
+      context: .
+      dockerfile: Tatar.Api/Dockerfile
