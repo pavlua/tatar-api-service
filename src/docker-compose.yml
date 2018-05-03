@@ -3,6 +3,8 @@ version: '3'
 services:
   tatar.api:
     image: tatar.api
+    ports:
+      - "5454:80"
     build:
       context: .
       dockerfile: Tatar.Api/Dockerfile
