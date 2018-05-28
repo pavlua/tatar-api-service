@@ -57,10 +57,19 @@ namespace Tatar.QuestionParser.Controllers
         public async Task<Question[]> Get()
         {
             return await _context.Questions.ToArrayAsync();
-        } 
+        }
 
+        /// <summary>
+        /// Сохраняет вопрос в БД
+        /// </summary>
+        /// <param name="questionText">Текст вопроса</param>
+        /// <response code="201">Returns the newly created item</response>
+        /// <response code="400">If the item is null</response> 
+        /// <returns>IActionResult</returns>
         [HttpPost]
-        public async Task<IActionResult> SaveQuestion(string questionText)
+        [ProducesResponseType(typeof(Question), 200)]
+        [ProducesResponseType(400)]
+        public async Task<IActionResult> SaveQuestion([FromBody] string questionText)
         {
             if (string.IsNullOrWhiteSpace(questionText))
             {
