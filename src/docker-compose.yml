@@ -1,6 +1,30 @@
 version: '3'
 
 services:
+  sqlserver:
+    image: microsoft/mssql-server-linux:latest
+    container_name: sqlserver
+    volumes:
+      - rabbitmqdata:/var/opt/mssql 
+    ports:
+      - "1434:1433"
+    environment:
+      - ACCEPT_EULA=Y 
+      - MSSQL_PID=Developer
+      - SA_PASSWORD=8jkGh47hnDw89Haq8LN2
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    volumes:
+      - sqlserverdata:/var/lib/rabbitmq
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=rabbitmquser
+      - RABBITMQ_DEFAULT_PASS=DEBmbwkSrzy9D1T9cJfa
+
   tatar.api:
     image: tatar.api
     ports:
@@ -8,3 +32,20 @@ services:
     build:
       context: .
       dockerfile: Tatar.Api/Dockerfile
+
+  tatar.questionparser:
+    image: tatar.questionparser
+    depends_on:
+      - rabbitmq
+      - sqlserver
+    build:
+      context: .
+      dockerfile: Tatar.QuestionParser/Dockerfile
+    ports:
+      - "5455:80"
+
+volumes:
+  sqlserverdata:
+    external: true    
+  rabbitmqdata:
+    external: true
